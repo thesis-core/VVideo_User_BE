@@ -10,6 +10,7 @@ import { PassportModule } from '@nestjs/passport';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from '../user/user.module';
 import { User } from '../user/entity/user.entity';
+import { LocalStrategy } from './strategy/local.strategy';
 
 @Module({
     imports: [
@@ -23,7 +24,7 @@ import { User } from '../user/entity/user.entity';
             signOptions: { expiresIn: process.env.ACCESS_TOKEN_EXPIRY },
         }),
     ],
-    providers: [AuthService, JwtStrategy],
+    providers: [AuthService, JwtStrategy, LocalStrategy],
     controllers: [AuthController],
     exports: [AuthService],
 })

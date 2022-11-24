@@ -1,6 +1,7 @@
 import { Entity, ObjectID, ObjectIdColumn, Column, BeforeInsert } from 'typeorm';
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 import * as bcrypt from 'bcrypt';
+import { UserTier } from '../../userTier/entity/userTier.entity';
 
 @Entity()
 export class User {
@@ -32,10 +33,10 @@ export class User {
     @IsNotEmpty()
     facebookId: string;
 
-    @Column()
+    @Column(() => UserTier)
     @IsString()
     @IsNotEmpty()
-    userTier: string;
+    userTier: UserTier;
 
     @Column()
     @IsString()
