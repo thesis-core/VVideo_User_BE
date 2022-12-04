@@ -1,10 +1,9 @@
 import { Module } from '@nestjs/common';
 import Modules from './modules';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { KafkaModule } from '@rob3000/nestjs-kafka';
 import { MongoEventDispatcher } from 'nest-outbox-typeorm';
+import { AuthController } from './module/auth/auth.controller';
 @Module({
     imports: [
         ...Modules,
@@ -34,7 +33,7 @@ import { MongoEventDispatcher } from 'nest-outbox-typeorm';
             },
         ]),
     ],
-    controllers: [AppController],
-    providers: [AppService, MongoEventDispatcher],
+    controllers: [AuthController],
+    providers: [MongoEventDispatcher],
 })
 export class AppModule {}

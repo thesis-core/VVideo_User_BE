@@ -13,8 +13,8 @@ export class ResponseInterceptor<T> implements NestInterceptor<T, Response<T>> {
             map((data) => {
                 return {
                     code: context.switchToHttp().getResponse().statusCode,
-                    data: data.data || data,
-                    message: data.message,
+                    data: data?.data || data,
+                    message: data?.message,
                 };
             }),
         );

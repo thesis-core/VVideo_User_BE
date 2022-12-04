@@ -1,4 +1,10 @@
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { FilmGroup } from '../entity/filmGroup.entity';
+import { Injectable } from '@nestjs/common';
 
-export class FilmGroupRepository extends Repository<FilmGroup> {}
+@Injectable()
+export class FilmGroupRepository extends Repository<FilmGroup> {
+    constructor(private dataSource: DataSource) {
+        super(FilmGroup, dataSource.createEntityManager());
+    }
+}

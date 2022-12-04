@@ -2,9 +2,10 @@ import { Entity, ObjectID, ObjectIdColumn, Column, BeforeInsert } from 'typeorm'
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 import * as bcrypt from 'bcrypt';
 import { UserTier } from '../../userTier/entity/userTier.entity';
+import { MongoBaseEntity } from 'nest-outbox-typeorm';
 
 @Entity()
-export class User {
+export class User extends MongoBaseEntity {
     @ObjectIdColumn()
     id: ObjectID;
 
@@ -13,7 +14,7 @@ export class User {
     @IsNotEmpty()
     email: string;
 
-    @Column()
+    @Column({ nullable: true })
     @IsString()
     @IsNotEmpty()
     password: string;
@@ -45,6 +46,8 @@ export class User {
 
     @BeforeInsert()
     async actionBeforeInsert(): Promise<void> {
-        this.password = await bcrypt.hash(this.password, +process.env.SALT_ROUND);
+        if (this.password) {
+            this.password = await bcrypt.hash(this.password, +process.env.SALT_ROUND);
+        }
     }
 }
