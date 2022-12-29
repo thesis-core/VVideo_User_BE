@@ -6,6 +6,8 @@ import { AuthModule } from './module/auth/auth.module';
 import { GenreModule } from './module/genre/genre.module';
 import { FilmModule } from './module/film/film.module';
 import { MailModule } from './module/mail/mail.module';
+import { ShortVideoModule } from './module/shortVideo/shortVideo.module';
+import { UserRating } from './module/userRating/entity/userRating.entity';
 
 const Modules = [
     UserModule,
@@ -14,6 +16,9 @@ const Modules = [
     FilmModule,
     MailModule,
     AuthModule,
+    ShortVideoModule,
+    UserRating,
+    FilmModule,
     TypeOrmModule.forRootAsync({ useFactory: ormConfig }),
 ];
 export default Modules;

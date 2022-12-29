@@ -1,13 +1,17 @@
-import { Entity, ObjectID, ObjectIdColumn, Column, BeforeInsert } from 'typeorm';
+import { Entity, ObjectID, ObjectIdColumn, Column, BeforeInsert, PrimaryColumn } from 'typeorm';
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 import * as bcrypt from 'bcrypt';
 import { UserTier } from '../../userTier/entity/userTier.entity';
 import { MongoBaseEntity } from 'nest-outbox-typeorm';
+import { PlayList } from '../../playlist/entity/playList.entity';
 
 @Entity()
 export class User extends MongoBaseEntity {
     @ObjectIdColumn()
-    id: ObjectID;
+    _id: ObjectID;
+
+    @PrimaryColumn()
+    id: string;
 
     @Column()
     @IsEmail()
@@ -35,7 +39,6 @@ export class User extends MongoBaseEntity {
     facebookId: string;
 
     @Column(() => UserTier)
-    @IsString()
     @IsNotEmpty()
     userTier: UserTier;
 
@@ -43,6 +46,10 @@ export class User extends MongoBaseEntity {
     @IsString()
     @IsNotEmpty()
     stripeId: string;
+
+    @Column(() => PlayList)
+    @IsNotEmpty()
+    playList: PlayList[];
 
     @BeforeInsert()
     async actionBeforeInsert(): Promise<void> {

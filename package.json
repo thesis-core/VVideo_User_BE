@@ -45,6 +45,7 @@
     "commitlint": "^17.1.2",
     "dotenv": "^16.0.2",
     "env-cmd": "^10.1.0",
+    "generate-password": "^1.7.0",
     "handlebars": "^4.7.7",
     "husky": "^8.0.1",
     "kafkajs": "^2.2.0",

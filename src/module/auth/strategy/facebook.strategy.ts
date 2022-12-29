@@ -23,7 +23,7 @@ export class FacebookStrategy extends PassportStrategy(Strategy, 'facebook') {
         const { name, emails, id } = profile;
         // const avatarUrl = `https://graph.facebook.com/${profile.id}/picture?width=200&height=200&access_token=${accessToken}`;
         const user = {
-            email: emails[0].value,
+            email: emails ? emails[0].value : null,
             firstName: name.givenName,
             lastName: name.familyName,
             facebookId: id,

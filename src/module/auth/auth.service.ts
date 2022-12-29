@@ -1,4 +1,4 @@
-import { BadRequestException, ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import * as bcrypt from 'bcrypt';
@@ -11,9 +11,10 @@ import { UserRepository } from '../user/repository/user.repository';
 import { UserService } from '../user/user.service';
 import { SignUpDto } from './dto/signUp.dto';
 import { EntityManager } from 'typeorm/entity-manager/EntityManager';
-import { MongoEventDispatcher, OutboxEvent } from 'nest-outbox-typeorm';
+import { MongoEventDispatcher, MongoOutboxEvent } from 'nest-outbox-typeorm';
 import { SignUpEvent } from './event/signUp.event';
 import { Request } from 'express';
+import { ChangePasswordDto } from './dto/changePassword.dto';
 
 @Injectable()
 export class AuthService {
@@ -37,7 +38,7 @@ export class AuthService {
             throw new ForbiddenException({ message: 'UnAuthorized' });
         }
         return {
-            id: user.id,
+            _id: user._id,
             email: user.email,
         };
     }
@@ -55,7 +56,8 @@ export class AuthService {
         if (!comparePassword) {
             throw new ForbiddenException({ message: 'Password was wrong' });
         }
-        const payload = { email: user.email, id: user.id };
+        const payload = { email: user.email, id: user._id };
+
         return {
             access_token: this.jwtService.sign(payload),
             refresh_token: this.jwtService.sign(payload, this.refreshTokenConfig),
@@ -68,7 +70,9 @@ export class AuthService {
         let payload;
         if (!exist) {
             let newUser = new User();
-            newUser.email = user.email;
+            if (user.email) {
+                newUser.email = user.email;
+            }
             newUser.fullName = user.firstName + ' ' + user.lastName;
             newUser.avatarUrl = user.avatarUrl;
             newUser.facebookId = user.facebookId;
@@ -76,19 +80,19 @@ export class AuthService {
                 newUser = await tx.save(newUser);
                 await this.mongoEventDispatcher.onDomainEvent(
                     new SignUpEvent(
-                        newUser.id.toString(),
+                        newUser._id.toString(),
                         'UserFacebookCreated',
                         newUser as unknown as Record<string, unknown>,
                     ),
                     async (outbox) => {
                         const outboxRecord = await tx.save(outbox);
-                        await tx.delete(OutboxEvent, { id: outboxRecord.id });
+                        await tx.delete(MongoOutboxEvent, { id: outboxRecord.id });
                     },
                 );
             });
-            payload = { email: newUser.email, id: newUser.id };
+            payload = { email: newUser.email, id: newUser._id };
         } else {
-            payload = { email: exist.email, id: exist.id };
+            payload = { email: exist.email, id: exist._id };
         }
         if (exist && !exist.facebookId) {
             exist.facebookId = user.facebookId;
@@ -96,13 +100,13 @@ export class AuthService {
                 const newUser = await tx.save(exist);
                 await this.mongoEventDispatcher.onDomainEvent(
                     new SignUpEvent(
-                        newUser.id.toString(),
+                        newUser._id.toString(),
                         'UserFacebookCreated',
                         newUser as unknown as Record<string, unknown>,
                     ),
                     async (outbox) => {
                         const outboxRecord = await tx.save(outbox);
-                        await tx.delete(OutboxEvent, { id: outboxRecord.id });
+                        await tx.delete(MongoOutboxEvent, { id: outboxRecord.id });
                     },
                 );
             });
@@ -129,10 +133,10 @@ export class AuthService {
         await this.entityManager.transaction(async (tx) => {
             const newUser = await tx.save(user);
             await this.mongoEventDispatcher.onDomainEvent(
-                new SignUpEvent(newUser.id.toString(), 'UserCreated', newUser as unknown as Record<string, unknown>),
+                new SignUpEvent(newUser._id.toString(), 'UserCreated', newUser as unknown as Record<string, unknown>),
                 async (outbox) => {
                     const outboxRecord = await tx.save(outbox);
-                    await tx.delete(OutboxEvent, { id: outboxRecord.id });
+                    await tx.delete(MongoOutboxEvent, { id: outboxRecord.id });
                 },
             );
         });
@@ -142,11 +146,23 @@ export class AuthService {
         let refreshTokenDecode;
         try {
             refreshTokenDecode = await this.jwtService.verify(refreshToken, this.refreshTokenConfig);
+            const payload = { email: refreshTokenDecode.email, id: refreshTokenDecode.id };
+            return {
+                access_token: this.jwtService.sign(payload),
+            };
         } catch (e) {
-            throw new UnauthorizedException({ message: 'INVALID_TOKEN' });
+            throw new ForbiddenException({ message: 'INVALID_TOKEN' });
         }
-        return {
-            access_token: this.jwtService.sign(refreshTokenDecode),
-        };
+    }
+
+    async changePassword(changePasswordDto: ChangePasswordDto, req: Request): Promise<void> {
+        const user: Partial<User> = req.user;
+        const exist = await this.userRepository.findOneBy({ email: user.email });
+        const comparePassword = await bcrypt.compare(changePasswordDto.oldPassword, exist.password);
+        if (!comparePassword) {
+            throw new BadRequestException({ message: 'Old password is wrong' });
+        }
+        exist.password = changePasswordDto.newPassword;
+        await this.userRepository.save(exist);
     }
 }

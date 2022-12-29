@@ -1,5 +1,5 @@
 import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { Cast } from '../../cast/entity/cast.entity';
 import { Director } from '../../director/entity/director.entity';
 import { MongoBaseEntity } from 'nest-outbox-typeorm';
@@ -7,12 +7,12 @@ import { MongoBaseEntity } from 'nest-outbox-typeorm';
 @Entity()
 export class FilmGroup extends MongoBaseEntity {
     @ObjectIdColumn()
-    id: ObjectID;
+    _id: ObjectID;
 
     @Column()
     @IsNotEmpty()
     @IsString()
-    filmId: string;
+    filmGroupId: string;
 
     @Column()
     @IsNotEmpty()
@@ -69,4 +69,22 @@ export class FilmGroup extends MongoBaseEntity {
     //
     @Column(() => Director)
     directors: Director[];
+
+    @Column({ default: 0 })
+    @IsNotEmpty()
+    @IsNumber()
+    avgRating: number;
+
+    @Column()
+    @IsNotEmpty()
+    @IsNumber()
+    ratingCount: number;
+
+    @Column({ default: 0 })
+    @IsNotEmpty()
+    @IsNumber()
+    viewCount: number;
+
+    @Column()
+    createdAt: Date;
 }

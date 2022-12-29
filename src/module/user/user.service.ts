@@ -10,10 +10,8 @@ export class UserService {
         private userRepository: UserRepository,
     ) {}
 
-    async testMongo() {
-        const user = new User();
-        user.email = 'thai@gmail.com';
-        user.password = 'aedssadsad';
-        return await this.userRepository.save(user);
-    }
+    // async createPlayList(playListDto: CreatePlayListDto, userId: string) {
+    //     const user = this.userRepository.findOneBy({ id: userId });
+    //     const playList = new PlayList(playListDto.name, playListDto.description, playListDto.filmGroupId);
+    // }
 }

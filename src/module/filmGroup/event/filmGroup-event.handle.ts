@@ -47,14 +47,14 @@ export class FilmGroupEventHandle implements OnModuleInit {
         const filmGroup = new FilmGroup();
 
         const exist = await this.filmGroupRepository.findOneBy({
-            filmId: _data.id as string,
+            filmGroupId: _data.id as string,
         });
         if (exist && exist._messageIds.indexOf(_messageId) !== -1) {
             this.logger.error(`Message: ${_messageId}`);
             return;
         }
 
-        filmGroup.filmId = _data.id as string;
+        filmGroup.filmGroupId = _data.id as string;
         filmGroup.name = _data.name as string;
         filmGroup.country = _data.country as string;
         filmGroup.quality = _data.quality as string;
@@ -62,12 +62,13 @@ export class FilmGroupEventHandle implements OnModuleInit {
         filmGroup.bannerUrl = _data.bannerUrl as string;
         filmGroup.trailerUrl = _data.trailerUrl as string;
         filmGroup.thumbnailUrl = _data.thumbnailUrl as string;
+        filmGroup.viewCount = 0;
+        filmGroup.ratingCount = 1;
         filmGroup.name = _data.country as string;
+        filmGroup.createdAt = new Date(_data.createdAt as string);
         filmGroup.description = _data.description ? (_data.description as string) : null;
-
         const casts = _data.casts as Cast[];
         const directors = _data.directors as Director[];
-
         const newCasts = [];
         if (casts) {
             for (const cast of casts) {

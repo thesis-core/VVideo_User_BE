@@ -1,14 +1,18 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { JWTAuthGuard } from '../auth/guards/jwt-auth.guard';
 
-@Controller()
+@Controller('users')
+@UseGuards(JWTAuthGuard)
+@ApiBearerAuth()
 @ApiTags('users')
 export class UserController {
     constructor(private userService: UserService) {}
 
-    @Get()
-    async testMongo() {
-        return await this.userService.testMongo();
-    }
+    // @Post('play-list')
+    // async createPlayList(@Body() playListDto: CreatePlayListDto, @Req() req: Request) {
+    //     const user = req.user;
+    // return this.userService.createPlayList(playListDto, user.id);
+    // }
 }

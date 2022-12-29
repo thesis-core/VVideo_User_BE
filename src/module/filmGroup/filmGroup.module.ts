@@ -6,10 +6,11 @@ import { FilmGroupService } from './filmGroup.service';
 import { FilmGroupController } from './filmGroup.controller';
 import { FilmGroupRepository } from './repository/filmGroup.repository';
 import { Cast } from '../cast/entity/cast.entity';
+import { MongoEventDispatcher } from 'nest-outbox-typeorm';
 
 @Module({
     imports: [TypeOrmModule.forFeature([FilmGroup, Cast])],
-    providers: [FilmGroupService, FilmGroupEventHandle, FilmGroupRepository],
+    providers: [FilmGroupService, FilmGroupEventHandle, FilmGroupRepository, MongoEventDispatcher],
     controllers: [FilmGroupController],
     exports: [FilmGroupService, FilmGroupEventHandle],
 })

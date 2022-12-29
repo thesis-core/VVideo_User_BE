@@ -9,6 +9,8 @@ import { UserService } from '../user/user.service';
 import { FacebookAuthGuard } from './guards/facebook-auth.guard';
 import { Request } from 'express';
 import { LocalAuthGuard } from './guards/local-auth.guard';
+import { ChangePasswordDto } from './dto/changePassword.dto';
+import { JWTAuthGuard } from './guards/jwt-auth.guard';
 @Controller('auth')
 @ApiTags('Auth')
 export class AuthController {
@@ -48,5 +50,12 @@ export class AuthController {
         } catch (e) {
             throw new Error(e);
         }
+    }
+
+    @Post('change-password')
+    @UseGuards(JWTAuthGuard)
+    @HttpCode(HttpStatus.OK)
+    async changePassword(@Body() changePasswordDto: ChangePasswordDto, @Req() req: Request): Promise<void> {
+        return this.authService.changePassword(changePasswordDto, req);
     }
 }

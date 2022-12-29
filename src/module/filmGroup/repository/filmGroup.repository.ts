@@ -7,4 +7,11 @@ export class FilmGroupRepository extends Repository<FilmGroup> {
     constructor(private dataSource: DataSource) {
         super(FilmGroup, dataSource.createEntityManager());
     }
+    // async getAllFilmGroup(getAllFilmGroup: GetAllFilmGroupDto): Promise<FilmGroup[]> {
+    //     return this.find();
+    // return this.createQueryBuilder()
+    //     .limit(limit)
+    //     .offset(page * limit)
+    //     .getMany();
+    // }
 }

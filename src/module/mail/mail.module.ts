@@ -4,9 +4,13 @@ import { Module } from '@nestjs/common';
 import { MailService } from './mail.service';
 import { join } from 'path';
 import { MailController } from './mail.controller';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from '../user/entity/user.entity';
+import { UserRepository } from '../user/repository/user.repository';
 
 @Module({
     imports: [
+        TypeOrmModule.forFeature([User]),
         MailerModule.forRoot({
             // transport: 'smtps://user@example.com:topsecret@smtp.example.com',
             // or
@@ -35,7 +39,7 @@ import { MailController } from './mail.controller';
         }),
     ],
     controllers: [MailController],
-    providers: [MailService],
+    providers: [MailService, UserRepository],
     exports: [MailService], // 👈 export for DI
 })
 export class MailModule {}
