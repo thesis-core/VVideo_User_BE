@@ -11,8 +11,9 @@ export class UserController {
     constructor(private userService: UserService) {}
 
     // @Post('play-list')
-    // async createPlayList(@Body() playListDto: CreatePlayListDto, @Req() req: Request) {
+    // @HttpCode(HttpStatus.CREATED)
+    // async createPlayList(@Body() playListDto: CreatePlayListDto, @Req() req: Request): Promise<void> {
     //     const user = req.user;
-    // return this.userService.createPlayList(playListDto, user.id);
+    //     return this.userService.createPlayList(playListDto, user.id);
     // }
 }

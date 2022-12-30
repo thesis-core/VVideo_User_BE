@@ -4,6 +4,7 @@ import { ExtractJwt, Strategy, VerifiedCallback } from 'passport-jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../../user/entity/user.entity';
 import { UserRepository } from '../../user/repository/user.repository';
+import { ObjectID } from 'typeorm';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -21,7 +22,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     async validate(payload: any, done: VerifiedCallback) {
         const user = await this.userRepository.findOne({
             where: {
-                id: payload.id,
+                _id: new ObjectID(payload.id),
             },
         });
         if (!user) {

@@ -1,4 +1,4 @@
-import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import * as bcrypt from 'bcrypt';
@@ -33,6 +33,9 @@ export class AuthService {
 
     async validateUser(email: string, password: string): Promise<Partial<User>> {
         const user = await this.userRepository.findOneBy({ email: email });
+        if (!user) {
+            throw new UnauthorizedException({ message: 'User is not exist' });
+        }
         const comparePassword = await bcrypt.compare(password, user.password);
         if (!comparePassword) {
             throw new ForbiddenException({ message: 'UnAuthorized' });
