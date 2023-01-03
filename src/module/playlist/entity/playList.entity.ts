@@ -1,6 +1,13 @@
-import { Column } from 'typeorm';
+import { Column, Entity, ObjectID, ObjectIdColumn, PrimaryColumn } from 'typeorm';
 
+@Entity()
 export class PlayList {
+    @ObjectIdColumn()
+    _id: ObjectID;
+
+    @PrimaryColumn()
+    id: string;
+
     @Column()
     name: string;
 
@@ -9,10 +16,4 @@ export class PlayList {
 
     @Column()
     filmGroupId: [];
-
-    constructor(name: string, description: string, filmGroupId: []) {
-        this.name = name;
-        this.description = description;
-        this.filmGroupId = filmGroupId;
-    }
 }

@@ -27,6 +27,7 @@ export class FilmGroupService {
         return {
             data,
             metadata: {
+                totalMatch: total,
                 totalPage: Math.ceil(total / limit),
             },
         };

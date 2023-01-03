@@ -11,7 +11,7 @@ async function bootstrap(): Promise<void> {
     const port = process.env.PORT || 8081;
     const appName = process.env.APP_NAME || 'test';
     const config = new DocumentBuilder()
-        .setTitle('VVideo')
+        .setTitle('User VVideo')
         .setDescription('The cats VVideo api')
         .setVersion('1.0')
         .addBearerAuth()

@@ -13,6 +13,11 @@ export class Film extends MongoBaseEntity {
     filmId: string;
 
     @Column()
+    @IsNotEmpty()
+    @IsString()
+    userId: string;
+
+    @Column()
     @IsString()
     @IsNotEmpty()
     url: string;

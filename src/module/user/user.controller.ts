@@ -10,10 +10,17 @@ import { JWTAuthGuard } from '../auth/guards/jwt-auth.guard';
 export class UserController {
     constructor(private userService: UserService) {}
 
-    // @Post('play-list')
+    // @Post('playlist')
     // @HttpCode(HttpStatus.CREATED)
     // async createPlayList(@Body() playListDto: CreatePlayListDto, @Req() req: Request): Promise<void> {
-    //     const user = req.user;
-    //     return this.userService.createPlayList(playListDto, user.id);
+    //     const user: Partial<User> = req.user;
+    //     return this.userService.createPlayList(playListDto, user._id);
+    // }
+    //
+    // @Post('add-to-playlist')
+    // @HttpCode(HttpStatus.CREATED)
+    // async addVideoToPlayList(@Body() videoToPlayListDto: VideoToPlayListDto, @Req() req: Request): Promise<any> {
+    //     const user: Partial<User> = req.user;
+    //     return this.userService.addVideoToPlayList(videoToPlayListDto, user._id);
     // }
 }

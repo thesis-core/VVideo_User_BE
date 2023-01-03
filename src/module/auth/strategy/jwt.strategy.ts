@@ -4,8 +4,9 @@ import { ExtractJwt, Strategy, VerifiedCallback } from 'passport-jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../../user/entity/user.entity';
 import { UserRepository } from '../../user/repository/user.repository';
-import { ObjectID } from 'typeorm';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { ObjectID } = require('mongodb');
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
     constructor(
