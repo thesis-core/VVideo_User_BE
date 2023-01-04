@@ -21,4 +21,9 @@ export class Film extends MongoBaseEntity {
     @IsString()
     @IsNotEmpty()
     url: string;
+
+    @Column()
+    @IsString()
+    @IsNotEmpty()
+    isSetting: boolean;
 }

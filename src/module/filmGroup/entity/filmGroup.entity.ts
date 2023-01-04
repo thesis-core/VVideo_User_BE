@@ -1,5 +1,5 @@
 import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { Cast } from '../../cast/entity/cast.entity';
 import { Director } from '../../director/entity/director.entity';
 import { MongoBaseEntity } from 'nest-outbox-typeorm';
@@ -84,6 +84,11 @@ export class FilmGroup extends MongoBaseEntity {
     @IsNotEmpty()
     @IsNumber()
     viewCount: number;
+
+    @Column({ default: 0 })
+    @IsNotEmpty()
+    @IsBoolean()
+    isDeleted: boolean;
 
     @Column()
     createdAt: Date;

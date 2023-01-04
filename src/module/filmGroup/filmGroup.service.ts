@@ -17,12 +17,12 @@ export class FilmGroupService {
     ) {}
 
     async getAllFilmGroup(getAllFilmGroupDto: GetAllFilmGroupDto): Promise<Response<FilmGroup[]>> {
-        const page = Number(getAllFilmGroupDto.page);
         const limit = Number(getAllFilmGroupDto.limit);
 
         const [data, total] = await this.filmGroupRepository.findAndCount({
-            take: limit,
-            skip: (page - 1) * limit,
+            where: {
+                isDeleted: false,
+            },
         });
         return {
             data,
@@ -35,6 +35,9 @@ export class FilmGroupService {
 
     async getHighRatingFilmGroup(): Promise<FilmGroup[]> {
         return await this.entityManager.find(FilmGroup, {
+            where: {
+                isDeleted: false,
+            },
             take: 1,
             order: {
                 ratingCount: 'DESC',
@@ -43,6 +46,9 @@ export class FilmGroupService {
     }
     async getNewestFilmGroup(): Promise<FilmGroup[]> {
         return await this.entityManager.find(FilmGroup, {
+            where: {
+                isDeleted: false,
+            },
             take: 1,
             order: {
                 createdAt: 'DESC',

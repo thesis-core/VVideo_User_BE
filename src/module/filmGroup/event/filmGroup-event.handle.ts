@@ -40,6 +40,9 @@ export class FilmGroupEventHandle implements OnModuleInit {
             case 'FilmGroupCreated':
                 await this.handleFilmGroupCreated(messageId, JSON.parse(data).payload as Record<string, unknown>);
                 break;
+            case 'FilmGroupDeleted':
+                await this.handleFilmGroupDeleted(messageId, JSON.parse(data).payload as Record<string, unknown>);
+                break;
             default:
         }
     }
@@ -64,6 +67,7 @@ export class FilmGroupEventHandle implements OnModuleInit {
         filmGroup.thumbnailUrl = _data.thumbnailUrl as string;
         filmGroup.viewCount = 0;
         filmGroup.ratingCount = 1;
+        filmGroup.isDeleted = false;
         filmGroup.name = _data.country as string;
         filmGroup.createdAt = new Date(_data.createdAt as string);
         filmGroup.description = _data.description ? (_data.description as string) : null;
@@ -85,6 +89,22 @@ export class FilmGroupEventHandle implements OnModuleInit {
         filmGroup.casts = newCasts;
         filmGroup.directors = newDirectors;
         filmGroup._messageIds.push(_messageId);
+        try {
+            await this.entityManager.save(filmGroup);
+        } catch (e) {
+            this.logger.error(`Message : ${_messageId}`, e);
+        }
+    }
+
+    private async handleFilmGroupDeleted(_messageId: string, _data: Record<string, unknown>): Promise<void> {
+        const filmGroup = await this.filmGroupRepository.findOneBy({
+            filmGroupId: _data.id as string,
+        });
+        if (filmGroup && filmGroup._messageIds.indexOf(_messageId) !== -1) {
+            this.logger.error(`Message: ${_messageId}`);
+            return;
+        }
+        filmGroup.isDeleted = true;
         try {
             await this.entityManager.save(filmGroup);
         } catch (e) {
