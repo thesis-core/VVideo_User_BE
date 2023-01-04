@@ -17,12 +17,15 @@ export class FilmGroupService {
     ) {}
 
     async getAllFilmGroup(getAllFilmGroupDto: GetAllFilmGroupDto): Promise<Response<FilmGroup[]>> {
+        const page = Number(getAllFilmGroupDto.page);
         const limit = Number(getAllFilmGroupDto.limit);
 
         const [data, total] = await this.filmGroupRepository.findAndCount({
             where: {
                 isDeleted: false,
             },
+            skip: (page - 1) * limit,
+            take: limit,
         });
         return {
             data,
