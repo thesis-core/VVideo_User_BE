@@ -9,6 +9,7 @@ import { MailModule } from './module/mail/mail.module';
 import { ShortVideoModule } from './module/shortVideo/shortVideo.module';
 import { UserRating } from './module/userRating/entity/userRating.entity';
 import { PlaylistModule } from './module/playlist/playlist.module';
+import { ConfigSettingModule } from './module/configSetting/configSetting.module';
 
 const Modules = [
     UserModule,
@@ -21,6 +22,7 @@ const Modules = [
     PlaylistModule,
     UserRating,
     FilmModule,
+    ConfigSettingModule,
     TypeOrmModule.forRootAsync({ useFactory: ormConfig }),
 ];
 export default Modules;

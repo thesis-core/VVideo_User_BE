@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { LoginUserDto } from './dto/loginUser.dto';
@@ -7,7 +7,7 @@ import { ResponseAuthDto } from './dto/responseAuth.dto';
 import { SignUpDto } from './dto/signUp.dto';
 import { UserService } from '../user/user.service';
 import { FacebookAuthGuard } from './guards/facebook-auth.guard';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { ChangePasswordDto } from './dto/changePassword.dto';
 import { JWTAuthGuard } from './guards/jwt-auth.guard';
@@ -27,11 +27,12 @@ export class AuthController {
     @HttpCode(HttpStatus.OK)
     async facebookLogin(): Promise<void> {}
 
-    @Get('/facebook/redirect')
+    @Get('/facebook/callback')
     @UseGuards(FacebookAuthGuard)
     @HttpCode(HttpStatus.OK)
-    async facebookLoginRedirect(@Req() req: Request): Promise<any> {
-        return this.authService.facebookLogin(req);
+    async facebookLoginRedirect(@Req() req: Request, @Res() res: Response): Promise<any> {
+        const { access_token, refresh_token } = await this.authService.facebookLogin(req);
+        res.redirect(`http://localhost:3201/#?access=${access_token}&refresh_token=${refresh_token}`);
     }
 
     @Post('sign-up')

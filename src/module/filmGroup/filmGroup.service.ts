@@ -3,7 +3,7 @@ import { FilmGroupRepository } from './repository/filmGroup.repository';
 import { FilmGroup } from './entity/filmGroup.entity';
 import { GetAllFilmGroupDto } from './dto/getAllFilmGroup.dto';
 import { IncrementViewDto } from './dto/incrementView.dto';
-import { MongoEventDispatcher, OutboxEvent } from 'nest-outbox-typeorm';
+import { MongoEventDispatcher, MongoOutboxEvent } from 'nest-outbox-typeorm';
 import { EntityManager } from 'typeorm/entity-manager/EntityManager';
 import { FilmGroupEvent } from './event/filmGroup.event';
 import { Response } from '../../shares/interceptors/response.interceptor';
@@ -19,11 +19,15 @@ export class FilmGroupService {
     async getAllFilmGroup(getAllFilmGroupDto: GetAllFilmGroupDto): Promise<Response<FilmGroup[]>> {
         const page = Number(getAllFilmGroupDto.page);
         const limit = Number(getAllFilmGroupDto.limit);
-
+        const search = getAllFilmGroupDto.search;
+        const queryOptional = {
+            isDeleted: false,
+        };
+        if (search) {
+            queryOptional['name'] = new RegExp(`^${search}`);
+        }
         const [data, total] = await this.filmGroupRepository.findAndCount({
-            where: {
-                isDeleted: false,
-            },
+            where: queryOptional,
             skip: (page - 1) * limit,
             take: limit,
         });
@@ -75,7 +79,7 @@ export class FilmGroupService {
                 ),
                 async (outbox) => {
                     const outboxRecord = await tx.save(outbox);
-                    await tx.delete(OutboxEvent, { id: outboxRecord.id });
+                    await tx.delete(MongoOutboxEvent, { id: outboxRecord.id });
                 },
             );
         });

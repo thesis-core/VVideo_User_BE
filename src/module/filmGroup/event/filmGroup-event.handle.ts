@@ -68,7 +68,6 @@ export class FilmGroupEventHandle implements OnModuleInit {
         filmGroup.viewCount = 0;
         filmGroup.ratingCount = 1;
         filmGroup.isDeleted = false;
-        filmGroup.name = _data.country as string;
         filmGroup.createdAt = new Date(_data.createdAt as string);
         filmGroup.description = _data.description ? (_data.description as string) : null;
         const casts = _data.casts as Cast[];

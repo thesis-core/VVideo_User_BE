@@ -15,5 +15,8 @@ export class PlayList {
     description: string;
 
     @Column()
-    filmGroupId: [];
+    filmGroupId: any[];
+
+    @Column()
+    userId: string;
 }

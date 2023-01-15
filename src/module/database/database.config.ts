@@ -7,13 +7,14 @@ import { Film } from '../film/entity/film.entity';
 import { ShortVideo } from '../shortVideo/entity/shortVideo.entity';
 import { UserRating } from '../userRating/entity/userRating.entity';
 import { PlayList } from '../playlist/entity/playList.entity';
+import { ConfigSetting } from '../configSetting/entity/configSetting.entity';
 export const defaultConfig: TypeOrmModuleOptions = {
     type: 'mongodb',
     url: process.env.MONGO_URL,
     // username: process.env.MYSQL_USERNAME,
     // password: process.env.MYSQL_PASSWORD,
     // autoLoadEntities: true,
-    entities: [User, FilmGroup, MongoOutboxEvent, Genre, Film, ShortVideo, UserRating, PlayList],
+    entities: [User, FilmGroup, MongoOutboxEvent, Genre, Film, ShortVideo, UserRating, PlayList, ConfigSetting],
     // entities: [Role, ConfigSetting, Country, Director, Cast, Film, FilmZone, Genre, FilmGroup, User],
     synchronize: false,
     // logging: true,

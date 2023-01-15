@@ -1,4 +1,4 @@
-import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
+import { AfterLoad, Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
 import { IsBoolean, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { Cast } from '../../cast/entity/cast.entity';
 import { Director } from '../../director/entity/director.entity';
@@ -7,7 +7,7 @@ import { MongoBaseEntity } from 'nest-outbox-typeorm';
 @Entity()
 export class FilmGroup extends MongoBaseEntity {
     @ObjectIdColumn()
-    _id: ObjectID;
+    _id: ObjectID | string;
 
     @Column()
     @IsNotEmpty()
@@ -92,4 +92,8 @@ export class FilmGroup extends MongoBaseEntity {
 
     @Column()
     createdAt: Date;
+    @AfterLoad()
+    async actionAfterLoad(): Promise<void> {
+        this._id = this._id.toString();
+    }
 }
