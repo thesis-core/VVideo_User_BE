@@ -1,4 +1,4 @@
-import { Controller, Get, HttpCode, HttpStatus, Patch, Query } from '@nestjs/common';
+import { Controller, Get, HttpCode, HttpStatus, Param, Patch, Query } from '@nestjs/common';
 import { FilmGroupService } from './filmGroup.service';
 import { ApiTags } from '@nestjs/swagger';
 import { GetAllFilmGroupDto } from './dto/getAllFilmGroup.dto';
@@ -14,6 +14,11 @@ export class FilmGroupController {
     @Get()
     async getAllFilmGroup(@Query() getAllFilmGroupDto: GetAllFilmGroupDto): Promise<Response<FilmGroup[]>> {
         return this.filmGroupService.getAllFilmGroup(getAllFilmGroupDto);
+    }
+
+    @Get(':id')
+    async getFilmGroup(@Param('id') id: string) {
+        return this.filmGroupService.getFilmGroup(id);
     }
 
     @Get('high-rating')

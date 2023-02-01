@@ -8,6 +8,8 @@ import { EntityManager } from 'typeorm/entity-manager/EntityManager';
 import { FilmGroupEvent } from './event/filmGroup.event';
 import { Response } from '../../shares/interceptors/response.interceptor';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const MongoObjectID = require('mongodb').ObjectID;
 @Injectable()
 export class FilmGroupService {
     constructor(
@@ -38,6 +40,11 @@ export class FilmGroupService {
                 totalPage: Math.ceil(total / limit),
             },
         };
+    }
+
+    async getFilmGroup(id: string) {
+        const fgId = new MongoObjectID(id);
+        return this.filmGroupRepository.findOne({ where: { _id: fgId } });
     }
 
     async getHighRatingFilmGroup(): Promise<FilmGroup[]> {
