@@ -23,6 +23,16 @@ export class ShortVideo extends MongoBaseEntity {
 
     @Column()
     @IsNotEmpty()
+    @IsString()
+    url: string;
+
+    @Column()
+    @IsNotEmpty()
+    @IsString()
+    genre: string;
+
+    @Column()
+    @IsNotEmpty()
     @IsEnum(ShortVideoPrivacy)
     privacy: ShortVideoPrivacy;
 }

@@ -6,4 +6,9 @@ export class VideoToPlayListDto {
     @IsNotEmpty()
     @IsString()
     filmId: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    playListId: string;
 }

@@ -1,7 +1,7 @@
 import { AfterLoad, Column, Entity, ObjectID, ObjectIdColumn, PrimaryColumn } from 'typeorm';
 
 @Entity()
-export class PlayList {
+export class ShortPlayList {
     @ObjectIdColumn()
     _id: ObjectID | string;
 
@@ -15,7 +15,7 @@ export class PlayList {
     description: string;
 
     @Column()
-    filmGroupId: any[];
+    shortVideoId: any[];
 
     @Column()
     userId: string;

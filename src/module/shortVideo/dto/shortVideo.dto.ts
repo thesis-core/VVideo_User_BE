@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
 import { ShortVideoPrivacy } from '../entity/shortVideo.entity';
 
@@ -16,5 +16,10 @@ export class ShortVideoDto {
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
-    privacy: ShortVideoPrivacy;
+    url: string;
+
+    @ApiPropertyOptional()
+    @IsNotEmpty()
+    @IsString()
+    privacy?: ShortVideoPrivacy;
 }

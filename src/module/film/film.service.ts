@@ -16,7 +16,7 @@ export class FilmService {
             window: '3600',
         });
 
-        const data = await this.filmRepository.findOneBy({ filmId: id });
+        const data = await this.filmRepository.findOneBy({ filmId: parseInt(id) });
         return {
             data,
             metadata: {

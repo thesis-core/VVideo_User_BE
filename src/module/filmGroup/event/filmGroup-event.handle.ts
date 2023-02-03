@@ -46,7 +46,7 @@ export class FilmGroupEventHandle implements OnModuleInit {
             default:
         }
     }
-    private async handleFilmGroupCreated(_messageId: string, _data: Record<string, unknown>): Promise<void> {
+    private async handleFilmGroupCreated(_messageId: string, _data: Record<any, unknown>): Promise<void> {
         const filmGroup = new FilmGroup();
 
         const exist = await this.filmGroupRepository.findOneBy({
@@ -70,6 +70,7 @@ export class FilmGroupEventHandle implements OnModuleInit {
         filmGroup.isDeleted = false;
         filmGroup.createdAt = new Date(_data.createdAt as string);
         filmGroup.description = _data.description ? (_data.description as string) : null;
+        filmGroup.genre = JSON.parse(JSON.stringify(_data.genre)).name as string;
         const casts = _data.casts as Cast[];
         const directors = _data.directors as Director[];
         const newCasts = [];

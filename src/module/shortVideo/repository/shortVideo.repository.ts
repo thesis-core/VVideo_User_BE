@@ -11,6 +11,8 @@ export class ShortVideoRepository extends Repository<ShortVideo> {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
     async getAllShortVideos(getAllShortVideosDto: GetAllShortVideosDto) {
-        return this.find();
+        const page = getAllShortVideosDto.page || 1;
+        const limit = getAllShortVideosDto.limit || 10;
+        return this.find({ take: limit, skip: (page - 1) * limit });
     }
 }

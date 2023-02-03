@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Post, Req, UseGuards } from '@nestjs/common';
 import { JWTAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { PlaylistService } from './playlist.service';
@@ -7,6 +7,7 @@ import { User } from '../user/entity/user.entity';
 import { Request } from 'express';
 import { VideoToPlayListDto } from './dto/videoToPlayList.dto';
 import { PlayList } from './entity/playList.entity';
+import { DeleteVideoFromPlayListDto } from './dto/deleteVideoFromPlayList.dto';
 
 @Controller('playlist')
 @UseGuards(JWTAuthGuard)
@@ -33,5 +34,14 @@ export class PlaylistController {
     async addVideoToPlayList(@Body() videoToPlayListDto: VideoToPlayListDto, @Req() req: Request): Promise<void> {
         const user: Partial<User> = req.user;
         return this.playListService.addVideoToPlayList(videoToPlayListDto, user._id);
+    }
+    @Delete('delete-from-playlist')
+    @HttpCode(HttpStatus.OK)
+    async deleteVideoFromPlayList(
+        @Body() deleteVideoDto: DeleteVideoFromPlayListDto,
+        @Req() req: Request,
+    ): Promise<void> {
+        const user: Partial<User> = req.user;
+        return this.playListService.deleteVideoFromPlayList(deleteVideoDto, user._id);
     }
 }

@@ -46,6 +46,7 @@ export class FilmEventHandle implements OnModuleInit {
         film._messageIds.push(_messageId);
         film.filmId = _data.id as string;
         film.url = _data.url as string;
+        film.name = _data.name as string;
         film.isSetting = false;
         try {
             await this.filmRepository.save(film);

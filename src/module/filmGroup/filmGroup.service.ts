@@ -22,16 +22,28 @@ export class FilmGroupService {
         const page = Number(getAllFilmGroupDto.page);
         const limit = Number(getAllFilmGroupDto.limit);
         const search = getAllFilmGroupDto.search;
+        const genre = getAllFilmGroupDto.genre;
+        const country = getAllFilmGroupDto.country;
+        const orderBy = getAllFilmGroupDto.orderBy;
         const queryOptional = {
             isDeleted: false,
         };
         if (search) {
             queryOptional['name'] = new RegExp(`^${search}`);
         }
+        if (genre) {
+            queryOptional['genre'] = new RegExp(`^${genre}`);
+        }
+        if (country) {
+            queryOptional['country'] = new RegExp(`^${country}`);
+        }
         const [data, total] = await this.filmGroupRepository.findAndCount({
             where: queryOptional,
             skip: (page - 1) * limit,
             take: limit,
+            order: {
+                name: orderBy === 'ASC' ? 'ASC' : 'DESC',
+            },
         });
         return {
             data,

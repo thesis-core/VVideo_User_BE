@@ -27,6 +27,7 @@ export class ShortVideoService {
         const shortVideo = new ShortVideo();
         shortVideo.userId = userId;
         shortVideo.name = shortVideoDto.name;
+        shortVideo.url = shortVideoDto.url;
         shortVideo.privacy = shortVideoDto.privacy;
         await this.entityManager.transaction(async (tx) => {
             const newShortVideo = await tx.save(shortVideo);

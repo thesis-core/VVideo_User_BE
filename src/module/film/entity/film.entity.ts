@@ -10,7 +10,12 @@ export class Film extends MongoBaseEntity {
     @Column()
     @IsNotEmpty()
     @IsString()
-    filmId: string;
+    filmId: string | number;
+
+    @Column()
+    @IsNotEmpty()
+    @IsString()
+    name: string;
 
     @Column()
     @IsNotEmpty()
