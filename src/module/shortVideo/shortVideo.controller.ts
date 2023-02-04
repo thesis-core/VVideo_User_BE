@@ -10,7 +10,6 @@ import { GetAllShortVideosDto } from './dto/getAllShortVideos.dto';
 
 @Controller('short-video')
 @ApiTags('short-video')
-@UseGuards(JWTAuthGuard)
 @ApiBearerAuth()
 export class ShortVideoController {
     constructor(private shortVideoService: ShortVideoService) {}
@@ -28,6 +27,7 @@ export class ShortVideoController {
 
     @Post('owner')
     @HttpCode(HttpStatus.OK)
+    @UseGuards(JWTAuthGuard)
     async createShortVideo(@Body() shortVideoDto: ShortVideoDto, @Req() req: Request): Promise<void> {
         const user: Partial<User> = req.user;
         return this.shortVideoService.createShortVideo(shortVideoDto, user._id.toString());

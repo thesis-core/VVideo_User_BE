@@ -1,5 +1,5 @@
 import { MongoBaseEntity } from 'nest-outbox-typeorm';
-import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
+import { AfterLoad, Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
 import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
 
 export enum ShortVideoPrivacy {
@@ -9,7 +9,7 @@ export enum ShortVideoPrivacy {
 @Entity()
 export class ShortVideo extends MongoBaseEntity {
     @ObjectIdColumn()
-    id: ObjectID;
+    id: ObjectID | string;
 
     @Column()
     @IsNotEmpty()
@@ -35,4 +35,9 @@ export class ShortVideo extends MongoBaseEntity {
     @IsNotEmpty()
     @IsEnum(ShortVideoPrivacy)
     privacy: ShortVideoPrivacy;
+
+    @AfterLoad()
+    async convertId() {
+        this.id = this.id.toString();
+    }
 }
