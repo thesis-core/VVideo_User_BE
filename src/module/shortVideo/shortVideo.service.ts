@@ -3,7 +3,7 @@ import { ShortVideoRepository } from './repository/shortVideo.repository';
 import { ShortVideo } from './entity/shortVideo.entity';
 import { ShortVideoDto } from './dto/shortVideo.dto';
 import { EntityManager } from 'typeorm/entity-manager/EntityManager';
-import { MongoEventDispatcher, OutboxEvent } from 'nest-outbox-typeorm';
+import { MongoEventDispatcher, MongoOutboxEvent } from 'nest-outbox-typeorm';
 import { ShortVideoEvent } from './event/shortVideo.event';
 import { GetAllShortVideosDto } from './dto/getAllShortVideos.dto';
 
@@ -28,18 +28,18 @@ export class ShortVideoService {
         shortVideo.userId = userId;
         shortVideo.name = shortVideoDto.name;
         shortVideo.url = shortVideoDto.url;
-        shortVideo.privacy = shortVideoDto.privacy;
+        shortVideo.privacy = 0;
         await this.entityManager.transaction(async (tx) => {
             const newShortVideo = await tx.save(shortVideo);
             await this.mongoEventDispatcher.onDomainEvent(
                 new ShortVideoEvent(
                     newShortVideo.id.toString(),
-                    'createShortVideo',
+                    'ShortVideoCreated',
                     newShortVideo as unknown as Record<string, unknown>,
                 ),
                 async (outbox) => {
                     const outboxRecord = await tx.save(outbox);
-                    await tx.delete(OutboxEvent, { id: outboxRecord.id });
+                    await tx.delete(MongoOutboxEvent, { id: outboxRecord.id });
                 },
             );
         });

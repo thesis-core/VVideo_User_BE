@@ -1,5 +1,5 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Post, Query, Req, UseGuards } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { ShortVideoService } from './shortVideo.service';
 import { JWTAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { User } from '../user/entity/user.entity';
@@ -11,6 +11,7 @@ import { GetAllShortVideosDto } from './dto/getAllShortVideos.dto';
 @Controller('short-video')
 @ApiTags('short-video')
 @UseGuards(JWTAuthGuard)
+@ApiBearerAuth()
 export class ShortVideoController {
     constructor(private shortVideoService: ShortVideoService) {}
 
