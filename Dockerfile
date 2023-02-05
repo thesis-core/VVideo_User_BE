@@ -11,13 +11,13 @@ COPY yarn.lock ./
 COPY *.tgz ./
 
 # Install app dependencies
-RUN yarn install
+RUN yarn install --frozen-lockfile
 
 # Bundle app source
 COPY . .
 
 # Creates a "dist" folder with the production build
-#RUN yarn run build
+RUN yarn run build
 
 # Start the server using the production build
-#CMD [ "node", "dist/main.js" ]
+CMD [ "yarn", "start:prod" ]
