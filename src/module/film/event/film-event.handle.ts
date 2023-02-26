@@ -43,7 +43,7 @@ export class FilmEventHandle implements OnModuleInit {
 
     private async handleFilmCreated(_messageId: string, _data: Record<string, unknown>): Promise<void> {
         const film = new Film();
-        film._messageIds.push(_messageId);
+        film.messageIds.push(_messageId);
         film.filmId = _data.id as string;
         film.url = _data.url as string;
         film.name = _data.name as string;

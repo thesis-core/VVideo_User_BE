@@ -4,6 +4,7 @@ import { ChangeUserInfoDto } from './dto/changeUserInfo.dto';
 import { ObjectID } from 'typeorm';
 import { MongoEventDispatcher } from 'nest-outbox-typeorm';
 import { EntityManager } from 'typeorm/entity-manager/EntityManager';
+import { User } from './entity/user.entity';
 
 @Injectable()
 export class UserService {
@@ -32,6 +33,9 @@ export class UserService {
             user.avatarUrl = avatarUrl;
         }
         return this.userRepository.update({ _id: userId }, updateUser);
+    }
+    async getUserInfo(userId: ObjectID): Promise<User> {
+        return this.userRepository.findOneBy({ _id: userId });
     }
 
     // async createPlayList(playListDto: CreatePlayListDto, userId: ObjectID) {

@@ -49,14 +49,18 @@ export class ConfigSettingEventHandle implements OnModuleInit {
         const exist = await this.configSettingRepository.findOneBy({
             configSettingId: _data.id as string,
         });
-        if (exist && exist._messageIds.indexOf(_messageId) !== -1) {
+        if (exist && exist.messageIds.indexOf(_messageId) !== -1) {
             this.logger.error(`Message: ${_messageId}`);
             return;
         }
         configSetting.configSettingId = _data.id as string;
         configSetting.key = _data.key as string;
         configSetting.value = _data.value as string;
-        configSetting._messageIds.push(_messageId);
+        if (configSetting.messageIds) {
+            configSetting.messageIds.push(_messageId);
+        } else {
+            configSetting.messageIds = [];
+        }
         try {
             await this.entityManager.save(configSetting);
         } catch (e) {
@@ -68,15 +72,15 @@ export class ConfigSettingEventHandle implements OnModuleInit {
         const configSetting = await this.configSettingRepository.findOneBy({
             configSettingId: _data.id as string,
         });
-        if (configSetting && configSetting._messageIds.indexOf(_messageId) !== -1) {
+        if (configSetting && configSetting.messageIds.indexOf(_messageId) !== -1) {
             this.logger.error(`Message: ${_messageId}`);
             return;
         }
         configSetting.key = _data.key as string;
         configSetting.value = _data.value as string;
-        configSetting._messageIds.push(_messageId);
+        configSetting.messageIds.push(_messageId);
         try {
-            await this.entityManager.save(configSetting);
+            await this.configSettingRepository.update({ configSettingId: _data.id as string }, { ...configSetting });
         } catch (e) {
             this.logger.error(`Message : ${_messageId}`, e);
         }

@@ -5,6 +5,7 @@ import { CreatePlayListDto } from './dto/createPlayList.dto';
 import { PlayList } from './entity/playList.entity';
 import { VideoToPlayListDto } from './dto/videoToPlayList.dto';
 import { DeleteVideoFromPlayListDto } from './dto/deleteVideoFromPlayList.dto';
+import { GetPlayListDto } from './dto/getPlayList.dto';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const MongoObjectID = require('mongodb').ObjectID;
@@ -18,12 +19,14 @@ export class PlaylistService {
         playList.filmGroupId = [];
         playList.name = playListDto.name;
         playList.description = playListDto.description;
+        playList.type = playListDto.type;
         await this.playListRepository.save(playList);
     }
-    async getPlayList(userId: ObjectID): Promise<PlayList[]> {
+    async getPlayList(userId: ObjectID, getPlayListDto: GetPlayListDto): Promise<PlayList[]> {
         return this.playListRepository.find({
             where: {
                 userId: userId.toString(),
+                type: getPlayListDto.type,
             },
         });
     }

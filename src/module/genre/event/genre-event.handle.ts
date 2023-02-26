@@ -46,13 +46,13 @@ export class GenreEventHandle implements OnModuleInit {
         const exist = await this.genreRepository.findOneBy({
             genreId: _data.id as string,
         });
-        if (exist && exist._messageIds.indexOf(_messageId) !== -1) {
+        if (exist && exist.messageIds.indexOf(_messageId) !== -1) {
             this.logger.error(`Message: ${_messageId}`);
             return;
         }
         genre.genreId = _data.id as string;
         genre.name = _data.name as string;
-        genre._messageIds.push(_messageId);
+        genre.messageIds.push(_messageId);
         try {
             await this.entityManager.save(genre);
         } catch (e) {

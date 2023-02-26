@@ -52,7 +52,7 @@ export class FilmGroupEventHandle implements OnModuleInit {
         const exist = await this.filmGroupRepository.findOneBy({
             filmGroupId: _data.id as string,
         });
-        if (exist && exist._messageIds.indexOf(_messageId) !== -1) {
+        if (exist && exist.messageIds.indexOf(_messageId) !== -1) {
             this.logger.error(`Message: ${_messageId}`);
             return;
         }
@@ -88,7 +88,11 @@ export class FilmGroupEventHandle implements OnModuleInit {
 
         filmGroup.casts = newCasts;
         filmGroup.directors = newDirectors;
-        filmGroup._messageIds.push(_messageId);
+        if (filmGroup.messageIds) {
+            filmGroup.messageIds.push(_messageId);
+        } else {
+            filmGroup.messageIds = [];
+        }
         try {
             await this.entityManager.save(filmGroup);
         } catch (e) {
@@ -100,13 +104,15 @@ export class FilmGroupEventHandle implements OnModuleInit {
         const filmGroup = await this.filmGroupRepository.findOneBy({
             filmGroupId: _data.id as string,
         });
-        if (filmGroup && filmGroup._messageIds.indexOf(_messageId) !== -1) {
+        if (filmGroup && filmGroup.messageIds.indexOf(_messageId) !== -1) {
             this.logger.error(`Message: ${_messageId}`);
             return;
         }
+        filmGroup.messageIds.push(_messageId);
         filmGroup.isDeleted = true;
+        delete filmGroup._id;
         try {
-            await this.entityManager.save(filmGroup);
+            await this.filmGroupRepository.update({ filmGroupId: _data.id as string }, { ...filmGroup });
         } catch (e) {
             this.logger.error(`Message : ${_messageId}`, e);
         }

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { JWTAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { PlaylistService } from './playlist.service';
@@ -8,6 +8,7 @@ import { Request } from 'express';
 import { VideoToPlayListDto } from './dto/videoToPlayList.dto';
 import { PlayList } from './entity/playList.entity';
 import { DeleteVideoFromPlayListDto } from './dto/deleteVideoFromPlayList.dto';
+import { GetPlayListDto } from './dto/getPlayList.dto';
 
 @Controller('playlist')
 @UseGuards(JWTAuthGuard)
@@ -24,9 +25,9 @@ export class PlaylistController {
     }
 
     @Get()
-    async getPlayList(@Req() req: Request): Promise<PlayList[]> {
+    async getPlayList(@Req() req: Request, @Query() getPlayListDto: GetPlayListDto): Promise<PlayList[]> {
         const user: Partial<User> = req.user;
-        return this.playListService.getPlayList(user._id);
+        return this.playListService.getPlayList(user._id, getPlayListDto);
     }
 
     @Post('add-to-playlist')

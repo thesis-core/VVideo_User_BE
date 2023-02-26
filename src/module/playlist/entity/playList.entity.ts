@@ -1,5 +1,10 @@
 import { AfterLoad, Column, Entity, ObjectID, ObjectIdColumn, PrimaryColumn } from 'typeorm';
 
+export enum PlayListType {
+    FilmGroup,
+    ShortVideo,
+}
+
 @Entity()
 export class PlayList {
     @ObjectIdColumn()
@@ -19,6 +24,9 @@ export class PlayList {
 
     @Column()
     userId: string;
+
+    @Column()
+    type: PlayListType;
 
     @AfterLoad()
     async convertId() {

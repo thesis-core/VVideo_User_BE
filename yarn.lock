@@ -6006,9 +6006,9 @@ neo-async@^2.6.0, neo-async@^2.6.2:
   resolved "https://registry.npmjs.org/neo-async/-/neo-async-2.6.2.tgz"
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
 
-nest-outbox-typeorm@./nest-outbox-typeorm-0.0.18.tgz:
-  version "0.0.18"
-  resolved "./nest-outbox-typeorm-0.0.18.tgz#3a74a417ef5888d420d56bb471f06b13dc709573"
+nest-outbox-typeorm@./nest-outbox-typeorm-0.0.19.tgz:
+  version "0.0.19"
+  resolved "./nest-outbox-typeorm-0.0.19.tgz#9dc6890a0cd600fac5a614db1dc3f31a85def898"
   dependencies:
     "@nestjs/common" "^9.0.0"
     "@nestjs/core" "^9.0.0"

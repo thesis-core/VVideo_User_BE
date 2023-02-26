@@ -1,4 +1,4 @@
-import { Body, Controller, Put, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Put, Req, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JWTAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -17,6 +17,12 @@ export class UserController {
     async changeUserInfo(@Body() changeUserInfoDto: ChangeUserInfoDto, @Req() req: Request): Promise<any> {
         const user: Partial<User> = req.user;
         return this.userService.changeUserInfo(changeUserInfoDto, user._id);
+    }
+
+    @Get('my-account')
+    async getUserInfo(@Req() req: Request): Promise<User> {
+        const user: Partial<User> = req.user;
+        return this.userService.getUserInfo(user._id);
     }
     // @Post('playlist')
     // @HttpCode(HttpStatus.CREATED)

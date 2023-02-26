@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import { PlayListType } from '../entity/playList.entity';
 
 export class CreatePlayListDto {
     @ApiProperty()
@@ -11,4 +12,9 @@ export class CreatePlayListDto {
     @IsNotEmpty()
     @IsString()
     description: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsEnum(PlayListType)
+    type: PlayListType;
 }
