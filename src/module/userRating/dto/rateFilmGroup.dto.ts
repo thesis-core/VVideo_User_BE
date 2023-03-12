@@ -1,14 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, Max, Min } from 'class-validator';
 
 export class RateFilmGroupDto {
     @ApiProperty()
     @IsNotEmpty()
-    @IsString()
-    filmGroupId: string;
+    @IsNumber()
+    filmGroupId: number;
 
     @ApiProperty()
+    @IsNotEmpty()
     @IsNumber()
-    @IsString()
+    @Min(1)
+    @Max(5)
     rate: number;
 }

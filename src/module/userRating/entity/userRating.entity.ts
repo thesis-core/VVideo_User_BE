@@ -5,7 +5,7 @@ import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 @Entity()
 export class UserRating extends MongoBaseEntity {
     @ObjectIdColumn()
-    id: ObjectID;
+    _id: ObjectID;
 
     @Column()
     @IsString()
@@ -13,9 +13,9 @@ export class UserRating extends MongoBaseEntity {
     userId: string;
 
     @Column()
-    @IsString()
+    @IsNumber()
     @IsNotEmpty()
-    filmGroupId: string;
+    filmGroupId: number;
 
     @Column()
     @IsNumber()

@@ -19,11 +19,12 @@ export class ShortVideoController {
         return this.shortVideoService.getAllShortVideos(getAllShortVideosDto);
     }
 
-    // @Get('owner')
-    // async getMyShortVideos(@Req() req: Request): Promise<ShortVideo[]> {
-    //     const user: Partial<User> = req.user;
-    //     return this.shortVideoService.getMyShortVideos(user._id);
-    // }
+    @Get('owner')
+    @UseGuards(JWTAuthGuard)
+    async getMyShortVideos(@Req() req: Request): Promise<ShortVideo[]> {
+        const user: Partial<User> = req.user;
+        return this.shortVideoService.getMyShortVideos(user._id.toString());
+    }
 
     @Post('owner')
     @HttpCode(HttpStatus.OK)

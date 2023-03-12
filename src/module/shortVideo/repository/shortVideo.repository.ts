@@ -14,5 +14,6 @@ export class ShortVideoRepository extends Repository<ShortVideo> {
         const page = Number(getAllShortVideosDto.page) || 1;
         const limit = Number(getAllShortVideosDto.limit) || 100;
         return this.find({ take: limit, skip: (page - 1) * limit });
+        // return this.find({ where: { privacy: 1 }, take: limit, skip: (page - 1) * limit });
     }
 }

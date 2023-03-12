@@ -4,7 +4,8 @@ import { RateFilmGroupDto } from './dto/rateFilmGroup.dto';
 import { UserRating } from './entity/userRating.entity';
 import { FilmGroupRepository } from '../filmGroup/repository/filmGroup.repository';
 import { EntityManager } from 'typeorm/entity-manager/EntityManager';
-
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const MongoObjectID = require('mongodb').ObjectID;
 @Injectable()
 export class UserRatingService {
     constructor(
@@ -29,16 +30,18 @@ export class UserRatingService {
             filmGroup.avgRating =
                 (filmGroup.avgRating * filmGroup.ratingCount + rateFilmGroupDto.rate) / (filmGroup.ratingCount + 1);
             filmGroup.ratingCount += 1;
-            await this.entityManager.transaction(async (tx) => {
-                await Promise.all([tx.save(filmGroup), tx.save(newUserRating)]);
-            });
+            delete filmGroup._id;
+            await this.filmGroupRepository.update({ filmGroupId: rateFilmGroupDto.filmGroupId }, { ...filmGroup });
+            await this.userRatingRepository.save(newUserRating);
         } else {
             filmGroup.avgRating =
                 filmGroup.avgRating + (rateFilmGroupDto.rate - userRating.rate) / filmGroup.ratingCount;
             userRating.rate = rateFilmGroupDto.rate;
-            await this.entityManager.transaction(async (tx) => {
-                await Promise.all([tx.save(filmGroup), tx.save(userRating)]);
-            });
+            delete filmGroup._id;
+            const userRatingId = MongoObjectID(userRating._id);
+            delete userRating._id;
+            await this.filmGroupRepository.update({ filmGroupId: rateFilmGroupDto.filmGroupId }, { ...filmGroup });
+            await this.userRatingRepository.update({ _id: userRatingId }, { ...userRating });
         }
     }
 }
